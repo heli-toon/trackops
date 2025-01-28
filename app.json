@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mape",
-    "slug": "mape",
+    "name": "trackops",
+    "slug": "trackops",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
