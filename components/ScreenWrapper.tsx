@@ -9,7 +9,7 @@ const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
   let paddingTop = Platform.OS == 'ios' ? height * 0.06 : 0;
   return (
     <View style={[{ paddingTop, flex: 1, backgroundColor: colors.neutral900 }, style]}>
-      <StatusBar barStyle={'dark-content'} />
+      <StatusBar backgroundColor={colors.neutral900} barStyle={'light-content'} />
       {children}
     </View>
   )
