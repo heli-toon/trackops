@@ -9,6 +9,7 @@ import Input from '@/components/Input'
 import { Ionicons } from '@expo/vector-icons'
 import Button from '@/components/Button'
 import { useRouter } from 'expo-router'
+import { useAuth } from '@/contexts/authContext'
 
 const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -16,19 +17,22 @@ const Register = () => {
     const emailRef = useRef('');
     const passwordRef = useRef('');
     const nameRef = useRef('');
+    const router = useRouter();
+    const { register: registerUser } = useAuth();
 
     const handleSubmit = async () =>{
         if (!emailRef || !passwordRef || !nameRef){
             Alert.alert('Register', 'Please fill all the fields');
             return;
+        };
+        setIsLoading(true);
+        const res = await registerUser(emailRef.current, passwordRef.current, nameRef.current);
+        setIsLoading(false);
+        console.log('registered: ', res);
+        if (res.success){
+            Alert.alert("Sign Up", res.msg);
         }
-        console.log('Email:', emailRef.current)
-        console.log('Email:', nameRef.current)
-        console.log('Password:', passwordRef.current)
     }
-
-    const router = useRouter();
-    
     return (
         <ScreenWrapper>
             <View style={styles.container}>
