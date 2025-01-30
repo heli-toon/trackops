@@ -9,9 +9,11 @@ import Input from '@/components/Input'
 import { Ionicons } from '@expo/vector-icons'
 import Button from '@/components/Button'
 import { useRouter } from 'expo-router'
+import { useAuth } from '@/contexts/authContext'
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const {login: loginUser} = useAuth();
 
     const emailRef = useRef('');
     const passwordRef = useRef('');
@@ -21,10 +23,13 @@ const Login = () => {
             Alert.alert('Login', 'Please fill all the fields');
             return;
         }
-        console.log('Email:', emailRef.current)
-        console.log('Password:', passwordRef.current)
+        setIsLoading(true);
+        const res = await loginUser(emailRef.current, passwordRef.current);
+        setIsLoading(false);
+        if (!res.success){
+            Alert.alert("Login", res.msg);
+        }
     }
-
     const router = useRouter();
     
     return (
