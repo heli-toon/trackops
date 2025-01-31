@@ -15,9 +15,9 @@ const Home = () => {
   }
   return (
     <ScreenWrapper>
-      <Text>Home</Text>
+      <Typo color={colors.white}>Home</Typo>
       <Button onPress={handleLogout}>
-        <Typo color={colors.black}>Home</Typo>
+        <Typo color={colors.black}>Logout</Typo>
       </Button>
     </ScreenWrapper>
   )
