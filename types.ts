@@ -1,4 +1,5 @@
-import React from "react";
+import { Timestamp } from "firebase/firestore";
+import React, { ReactNode } from "react";
 import { TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacityProps, ViewStyle } from "react-native";
 
 export type ScreenWrapperProps ={
@@ -33,6 +34,12 @@ export type TypoProps = {
     style? : TextStyle;
     textProps? : TextProps;
 }
+export type accountOptionType = {
+    title: string;
+    icon: React.ReactNode;
+    bgColor: string;
+    routeName? : any;
+}
 export type UserType = {
     uid? : string;
     email? : string | null;
@@ -40,7 +47,7 @@ export type UserType = {
     image?: any;
 } | null;
 export type UserDataType = {
-    name? : string;
+    name: string;
     image?: any;
 }
 export type AuthContextType = {
@@ -56,4 +63,32 @@ export type AuthContextType = {
         name: string,
     ) => Promise <{ success: boolean; msg?: string }>;
     updateUserData: (userId : string) => Promise<void>;
+};
+export type IconProps = {
+    name?: string;
+    color?: string;
+    size?: number;
+    fill?: string;
+};
+export type HeaderProps = {
+    title?: string;
+    style?: ViewStyle;
+    leftIcon?: ReactNode;
+    rightIcon?: ReactNode;
+};
+export type TransactionType = {
+    id?: string;
+    type?: string;
+    amount?: number;
+    category?: string;
+    date: Date | Timestamp | string;
+    description?: string;
+    image?: any;
+    uid?: string; 
+}
+
+export type ResponseType = {
+    success: boolean,
+    data?: any,
+    msg?: string,
 }
