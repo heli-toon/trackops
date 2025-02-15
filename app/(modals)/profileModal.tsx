@@ -15,6 +15,7 @@ import Button from '@/components/Button';
 import { useAuth } from '@/contexts/authContext';
 import { updateUser } from '@/userService';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 
 const ProfileModal = () => {
   const router = useRouter();
@@ -46,6 +47,17 @@ const ProfileModal = () => {
       Alert.alert("User", res.msg);
     }
   }
+  const onPickImage = async() => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setUserData({...userData, image: result.assets[0]});
+    }
+  }
   return (
     <ModalWrapper>
       <View style={styles.container}>
@@ -53,7 +65,7 @@ const ProfileModal = () => {
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.avatarContainer}>
             <Image style={styles.avatar} source={getProfileImage(userData.image)} contentFit='cover' transition={100} />
-            <TouchableOpacity style={styles.editIcon}>
+            <TouchableOpacity style={styles.editIcon} onPress={onPickImage}>
               <Ionicons name='pencil' size={verticalScale(20)} color={colors.neutral800} />
             </TouchableOpacity>
           </View>
