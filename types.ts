@@ -86,9 +86,18 @@ export type TransactionType = {
     image?: any;
     uid?: string; 
 }
-
+export type WalletType = {
+    id?: string;
+    name: string;
+    amount?: number;
+    totalIncome?: number;
+    totalExpenses?: number;
+    image: any;
+    uid?: string;
+    created?: Date;
+}
 export type ResponseType = {
-    success: boolean,
-    data?: any,
-    msg?: string,
+    success: boolean;
+    data?: any;
+    msg?: string;
 }
