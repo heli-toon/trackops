@@ -3,10 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@firebase/auth" : ["./node_modules/@firebase/auth/dist/index.rn.d.ts"],
+      "@/*": ["./*"],
+      "@firebase/auth/dist/rn/index": ["./node_modules/@firebase/auth/dist/rn/index.rn.d.ts"]
     }
   },
   "include": [

@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { Image } from 'expo-image'
 import { getProfileImage } from '@/services/imageService'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { signOut } from 'firebase/auth'
+import { signOut } from '@firebase/auth'
 import { auth } from '@/config/firebase'
 import { useRouter } from 'expo-router'
 
