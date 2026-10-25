@@ -5,7 +5,7 @@ TrackOps is an Expo and React Native expense tracking app. It currently includes
 ## Requirements
 
 - Node.js 20 LTS or newer
-- npm
+- bun
 - A Firebase project with Authentication and Cloud Firestore enabled
 - For device testing: Expo Go, or Android Studio / Xcode for a simulator
 
@@ -13,7 +13,7 @@ TrackOps is an Expo and React Native expense tracking app. It currently includes
 
 1. Create a project in the [Firebase Console](https://console.firebase.google.com/).
 2. Add a **Web app** to the Firebase project and copy its Firebase configuration values.
-3. In **Authentication → Sign-in method**, enable **Email/Password**.
+3. In **Authentication → Sign-in method**, enable **Email/Password** and **Google**.
 4. Create a **Cloud Firestore** database.
 5. Configure Firestore rules for authenticated users. A simple development starting point is below; review and tighten rules before production:
 
@@ -35,7 +35,7 @@ Firebase client configuration is included in the app bundle, so these values are
 ```bash
 git clone <repository-url>
 cd trackops
-npm install
+bun install
 cp .env.example .env
 ```
 
@@ -49,24 +49,33 @@ EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.firebasestorage.app
 EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
 EXPO_PUBLIC_FIREBASE_APP_ID=your-app-id
 EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=your-web-oauth-client-id
+EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=your-android-oauth-client-id
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=your-ios-oauth-client-id
 ```
 
 `EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID` is optional. The app does not currently initialize Firebase Analytics.
+
+Google sign-in also requires OAuth 2.0 client IDs in Google Cloud Console. Use the
+Web client ID created for the Firebase project, plus Android and iOS client IDs
+for native builds. The app's configured Expo scheme (`myapp`) is used for the
+native OAuth redirect. For web development, add the redirect URI shown by
+Expo AuthSession to the OAuth client's authorized redirect URIs.
 
 ## Run the app
 
 Start the Expo development server:
 
 ```bash
-npm start
+bun start
 ```
 
 Then use the terminal menu or Expo Go to open the app. You can also launch a target directly:
 
 ```bash
-npm run android
-npm run ios
-npm run web
+bun run android
+bun run ios
+bun run web
 ```
 
 The iOS simulator command requires macOS and Xcode. Android requires an Android emulator/device configured through Android Studio. For a physical device, install Expo Go and scan the QR code shown by Expo; keep the computer and phone on the same network if using the default LAN connection.
@@ -75,12 +84,12 @@ The iOS simulator command requires macOS and Xcode. Android requires an Android 
 
 | Command | Description |
 | --- | --- |
-| `npm start` | Start the Expo development server |
-| `npm run android` | Start Expo and open Android |
-| `npm run ios` | Start Expo and open the iOS simulator |
-| `npm run web` | Start the web version |
-| `npm run lint` | Run Expo lint |
-| `npm test` | Run Jest in watch mode |
+| `bun start` | Start the Expo development server |
+| `bun run android` | Start Expo and open Android |
+| `bun run ios` | Start Expo and open the iOS simulator |
+| `bun run web` | Start the web version |
+| `bun run lint` | Run Expo lint |
+| `bun test` | Run Jest in watch mode |
 
 ## Project layout
 
@@ -98,6 +107,7 @@ assets/              App images and fonts
 
 - **Firebase configuration missing:** check that `.env` is in the project root and uses the exact `EXPO_PUBLIC_FIREBASE_...` names above. Restart Expo after changing environment values.
 - **Authentication fails:** confirm Email/Password is enabled in Firebase Authentication and that the app is using the correct Firebase project.
+- **Google authentication fails:** confirm Google is enabled in Firebase Authentication, all client IDs match the Firebase project, and the AuthSession redirect URI is registered in Google Cloud Console.
 - **Firestore permission denied:** check that Firestore exists and its rules allow the signed-in user to access their own `users/{uid}` document.
 - **Changes do not appear:** stop the Expo server, then restart with `npx expo start --clear`.
 

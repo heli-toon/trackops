@@ -10,10 +10,19 @@ import { Ionicons } from '@expo/vector-icons'
 import Button from '@/components/Button'
 import { useRouter } from 'expo-router'
 import { useAuth } from '@/contexts/authContext'
+import * as WebBrowser from 'expo-web-browser'
+import * as Google from 'expo-auth-session/providers/google'
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const {login: loginUser} = useAuth();
+    const [googleRequest, , promptGoogleLogin] = Google.useAuthRequest({
+        androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+        iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+        webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    });
+    const {login: loginUser, googleLogin} = useAuth();
 
     const emailRef = useRef('');
     const passwordRef = useRef('');
@@ -30,6 +39,33 @@ const Login = () => {
             Alert.alert("Login", res.msg);
         }
     }
+    const handleGoogleLogin = async () => {
+        if (!googleRequest) {
+            Alert.alert('Google Login', 'Google login is not configured yet.');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const result = await promptGoogleLogin();
+            if (result.type === 'success' && result.authentication?.idToken) {
+                const response = await googleLogin(
+                    result.authentication.idToken,
+                    result.authentication.accessToken,
+                );
+                if (!response.success) {
+                    Alert.alert('Google Login', response.msg);
+                }
+            } else if (result.type !== 'dismiss' && result.type !== 'cancel') {
+                Alert.alert('Google Login', 'Unable to sign in with Google. Please try again.');
+            }
+        } catch (error) {
+            console.error('Google sign-in failed:', error);
+            Alert.alert('Google Login', 'Unable to sign in with Google. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
     const router = useRouter();
     
     return (
@@ -47,6 +83,9 @@ const Login = () => {
                     <Typo size={14} color={colors.text} style={{alignSelf:'flex-end'}}>Forgot Password?</Typo>
 
                     <Button loading={isLoading} onPress={handleSubmit}><Typo color={colors.black} size={21} fontWeight={'700'}>Login</Typo></Button>
+                    <Button loading={isLoading} onPress={handleGoogleLogin} style={styles.googleButton}>
+                        <Typo color={colors.text} size={18} fontWeight={'700'}>Continue with Google</Typo>
+                    </Button>
                 </View>
                 <View style={styles.footer}>
                     <Typo size={15}>Don't have an account?</Typo>
@@ -73,6 +112,11 @@ const styles = StyleSheet.create({
         color: colors.text,
     },
     form: {gap: spacingX._20},
+    googleButton: {
+        backgroundColor: colors.white,
+        borderWidth: 1,
+        borderColor: colors.neutral300,
+    },
     forgotPassword: {
         textAlign: 'right',
         color: colors.text,

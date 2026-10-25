@@ -20,6 +20,7 @@
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "expo": "^57.0.0",
+    "expo-auth-session": "~57.0.16",
     "expo-blur": "~57.0.3",
     "expo-constants": "~57.0.21",
     "expo-font": "~57.0.4",

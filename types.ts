@@ -57,6 +57,10 @@ export type AuthContextType = {
         email: string,
         password: string,
     ) => Promise <{ success: boolean; msg?: string }>;
+    googleLogin: (
+        idToken: string,
+        accessToken?: string,
+    ) => Promise <{ success: boolean; msg?: string }>;
     register: (
         email: string,
         password: string,

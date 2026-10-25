@@ -1,7 +1,7 @@
 import { auth, firestore } from "@/config/firebase";
 import { AuthContextType, UserType } from "@/types";
 import { useRouter } from "expo-router";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "@firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signInWithEmailAndPassword } from "@firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -37,6 +37,25 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
             let msg = error.message;
             if (msg.includes("(auth/invalid-credential)")) msg = "Wrong Credentials";
             if (msg.includes("(auth/invalid-email")) msg = "Invalid Email";
+            return { success: false, msg };
+        }
+    };
+    const googleLogin = async (idToken: string, accessToken?: string) => {
+        try {
+            const credential = GoogleAuthProvider.credential(idToken, accessToken);
+            const response = await signInWithCredential(auth, credential);
+            await setDoc(doc(firestore, "users", response.user.uid), {
+                uid: response.user.uid,
+                email: response.user.email,
+                name: response.user.displayName,
+                image: response.user.photoURL,
+            }, { merge: true });
+            return { success: true };
+        } catch (error: any) {
+            let msg = error.message;
+            if (msg.includes("(auth/account-exists-with-different-credential)")) {
+                msg = "An account already exists with this email. Sign in with the original provider.";
+            }
             return { success: false, msg };
         }
     };
@@ -80,6 +99,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
         user,
         setUser,
         login,
+        googleLogin,
         register,
         updateUserData,
     }
