@@ -80,25 +80,27 @@ export type HeaderProps = {
     leftIcon?: ReactNode;
     rightIcon?: ReactNode;
 };
+export type TransactionKind = "income" | "expense";
+
 export type TransactionType = {
     id?: string;
-    type?: string;
-    amount?: number;
-    category?: string;
-    date: Date | Timestamp | string;
-    description?: string;
-    image?: any;
-    uid?: string; 
+    type: TransactionKind;
+    amountMinor: number;
+    categoryId: string;
+    description: string;
+    date: Date | Timestamp;
+    walletId?: string;
+    createdAt?: Date | Timestamp;
+    updatedAt?: Date | Timestamp;
 }
 export type WalletType = {
     id?: string;
     name: string;
-    amount?: number;
-    totalIncome?: number;
-    totalExpenses?: number;
-    image: any;
-    uid?: string;
-    created?: Date;
+    image?: any;
+    openingBalanceMinor: number;
+    balanceMinor: number;
+    createdAt?: Date | Timestamp;
+    updatedAt?: Date | Timestamp;
 }
 export type ResponseType = {
     success: boolean;

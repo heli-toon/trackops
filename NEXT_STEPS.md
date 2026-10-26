@@ -12,15 +12,15 @@ Before adding features, make the project easy to run and maintain:
 
 - Confirm the Firebase environment variables and Google OAuth client IDs are
   documented and available locally.
-- Fix the existing TypeScript errors:
-  - The bottom-tab type mismatch in `app/(tabs)/_layout.tsx`.
-  - The React Native Firebase persistence import in `config/firebase.ts`.
-- Restore a working lint command and add a formatter if desired.
+- ✅ Fix the existing TypeScript errors:
+  - ✅ The bottom-tab type mismatch in `app/(tabs)/_layout.tsx`.
+  - ✅ The React Native Firebase persistence import in `config/firebase.ts`.
+- ✅ Restore a working lint command and add a formatter if desired.
 - Add a small test setup for authentication and transaction helpers.
 - Remove or rotate any credentials that may have been stored in local files such
   as `secrets.txt`. Never commit passwords, tokens, or service-account keys.
-- Decide whether the project will use npm, Bun, or another package manager and
-  keep the documentation and lockfile consistent.
+- ✅ Decide whether the project will use npm, Bun, or another package manager and
+  keep the documentation and lockfile consistent (Bun).
 
 ## 2. Define the expense-tracking data model
 
@@ -30,7 +30,7 @@ version could store each transaction under the authenticated user:
 ```text
 users/{uid}/transactions/{transactionId}
   type: "income" | "expense"
-  amount: number
+  amountMinor: number
   categoryId: string
   description: string
   date: Timestamp
@@ -38,6 +38,10 @@ users/{uid}/transactions/{transactionId}
   createdAt: Timestamp
   updatedAt: Timestamp
 ```
+
+The transaction and wallet TypeScript models and typed Firestore CRUD services
+are now in place. Amounts use integer minor units instead of floating-point
+currency values.
 
 Add supporting collections or documents for:
 
@@ -148,8 +152,8 @@ Work in small milestones that leave the app usable:
 ### Milestone 1: Foundation
 
 - Fix TypeScript and lint issues.
-- Add transaction and wallet types.
-- Add Firestore service modules.
+- ✅ Add transaction and wallet types.
+- ✅ Add Firestore service modules.
 - Add basic unit tests for validation and calculations.
 
 ### Milestone 2: Transactions

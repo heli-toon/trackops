@@ -23,6 +23,8 @@ const WalletModal = () => {
   const [wallet, setWallet] = useState<WalletType>({
     name: "",
     image: null,
+    openingBalanceMinor: 0,
+    balanceMinor: 0,
   });
   const [loading, setLoading] = useState(false);
 

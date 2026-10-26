@@ -1,11 +1,11 @@
 import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Text } from '@react-navigation/elements';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
 import { colors, spacingY } from '@/constants/theme';
 import { verticalScale } from '@/utils/styling';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function CustomTabs({ state, descriptors, navigation }:BottomTabBarProps) {
+export default function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
 
   const tabbarIcons:any = {
     index: (isFocused:boolean)=>(<Ionicons name='home' size={verticalScale(30)} color={isFocused ? colors.primary: colors.neutral400} />),

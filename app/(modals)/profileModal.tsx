@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { colors, spacingX, spacingY } from '@/constants/theme';
 import { scale, verticalScale } from '@/utils/styling';
 import ModalWrapper from '@/components/ModalWrapper';
@@ -21,18 +21,12 @@ const ProfileModal = () => {
   const router = useRouter();
   const {user, updateUserData} = useAuth();
   const [userData, setUserData] = useState<UserDataType>({
-    name: "",
-    image: null,
+    name: user?.name || "",
+    image: user?.image || null,
   });
   const [loading, setLoading] = useState(false);
-  useEffect(()=>{
-    setUserData({
-      name: user?.name || "",
-      image: user?.image || null,
-    });
-  }, [user])
   const onSubmit = async () => {
-    let {name, image} = userData;
+    const {name} = userData;
     if (!name.trim()){
       Alert.alert("User", "Please fill all fields");
       return;
