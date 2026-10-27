@@ -22,7 +22,7 @@ Before adding features, make the project easy to run and maintain:
 - ✅ Decide whether the project will use npm, Bun, or another package manager and
   keep the documentation and lockfile consistent (Bun).
 
-## 2. Define the expense-tracking data model
+## 2. Define the expense-tracking data model ✅
 
 The app needs a clear model before the screens can be completed. A useful first
 version could store each transaction under the authenticated user:
@@ -39,19 +39,22 @@ users/{uid}/transactions/{transactionId}
   updatedAt: Timestamp
 ```
 
-The transaction and wallet TypeScript models and typed Firestore CRUD services
-are now in place. Amounts use integer minor units instead of floating-point
-currency values.
+The transaction, wallet, category, budget, and user-preference TypeScript
+models and typed Firestore services are now in place. Amounts use integer minor
+units instead of floating-point currency values.
 
 Add supporting collections or documents for:
 
-- Wallets and account balances.
-- User-defined categories.
-- Monthly budgets.
-- User preferences, including currency and locale.
+- ✅ Wallets and account balances.
+- ✅ User-defined categories.
+- ✅ Monthly budgets.
+- ✅ User preferences, including currency and locale.
 
 Amounts should be stored consistently, preferably as integer minor units
 (for example, cents) rather than floating-point values.
+
+- ✅ Define the transaction, wallet, category, budget, and user-preference
+  models and typed Firestore services.
 
 ## 3. Build the minimum viable transaction flow
 

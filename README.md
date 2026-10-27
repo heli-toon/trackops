@@ -116,4 +116,8 @@ assets/              App images and fonts
 - Routes live under `app/` and use Expo Router's file-based routing.
 - Firebase Authentication persists on React Native using AsyncStorage.
 - Profile data is stored in the Firestore `users` collection.
-- The wallet total is currently hard-coded as a placeholder; transaction persistence and statistics are not implemented yet.
+- Transaction, wallet, category, budget, and user-preference data is scoped
+  under each authenticated user's Firestore document.
+- Monetary amounts are stored as integer minor units (for example, cents).
+- The wallet total is currently hard-coded as a placeholder; transaction
+  screens and statistics are not implemented yet.

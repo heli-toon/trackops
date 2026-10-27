@@ -102,6 +102,28 @@ export type WalletType = {
     createdAt?: Date | Timestamp;
     updatedAt?: Date | Timestamp;
 }
+export type CategoryType = {
+    id?: string;
+    name: string;
+    color?: string;
+    icon?: string;
+    createdAt?: Date | Timestamp;
+    updatedAt?: Date | Timestamp;
+}
+export type BudgetType = {
+    id?: string;
+    month: string;
+    categoryId: string;
+    amountMinor: number;
+    createdAt?: Date | Timestamp;
+    updatedAt?: Date | Timestamp;
+}
+export type UserPreferencesType = {
+    currency: string;
+    locale: string;
+    defaultWalletId?: string;
+    updatedAt?: Date | Timestamp;
+}
 export type ResponseType = {
     success: boolean;
     data?: any;
