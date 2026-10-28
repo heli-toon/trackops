@@ -56,19 +56,19 @@ Amounts should be stored consistently, preferably as integer minor units
 - ✅ Define the transaction, wallet, category, budget, and user-preference
   models and typed Firestore services.
 
-## 3. Build the minimum viable transaction flow
+## 3. Build the minimum viable transaction flow ✅
 
 The most important product milestone is allowing a user to record and manage
 expenses:
 
-1. Add a transaction form.
-2. Select income or expense.
-3. Enter an amount, date, description, wallet, and category.
-4. Validate required fields and reject invalid or negative values.
-5. Save the transaction to Firestore.
-6. Display recent transactions on the home screen.
-7. Support editing and deleting a transaction.
-8. Show loading, empty, offline, and error states.
+1. ✅ Add a transaction form.
+2. ✅ Select income or expense.
+3. ✅ Enter an amount, date, description, wallet, and category.
+4. ✅ Validate required fields and reject invalid or negative values.
+5. ✅ Save the transaction to Firestore.
+6. ✅ Display recent transactions on the home screen.
+7. ✅ Support editing and deleting a transaction.
+8. ✅ Show loading, empty, offline, and error states.
 
 Create reusable Firestore service functions instead of placing database queries
 directly in every screen.
