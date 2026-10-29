@@ -73,20 +73,18 @@ expenses:
 Create reusable Firestore service functions instead of placing database queries
 directly in every screen.
 
-## 4. Finish the wallet experience
+## 4. Finish the wallet experience ✅
 
-The wallet screens currently appear to be starter or placeholder screens. Finish
-them by supporting:
+The wallet screens now support:
 
-- Creating, editing, and deleting wallets.
-- An opening balance and current balance.
-- Income and expense totals per wallet.
-- Moving money between wallets, if that fits the product.
-- A clear rule for whether deleting a wallet is allowed when it has transactions.
+- ✅ Creating and editing wallets.
+- ✅ An opening balance and current balance.
+- ✅ Income and expense totals per wallet.
+- Wallet-to-wallet transfers are not included in this milestone.
+- ✅ Wallets with transactions cannot be deleted; empty wallets can be deleted.
 
-Do not rely only on a stored balance that can become stale. Either calculate
-balances from transactions or define a reliable update strategy using Firestore
-transactions or server-side aggregation.
+Balances are calculated from the opening balance and linked transactions rather
+than relying only on a stored balance that could become stale.
 
 ## 5. Implement useful statistics
 
