@@ -86,19 +86,19 @@ The wallet screens now support:
 Balances are calculated from the opening balance and linked transactions rather
 than relying only on a stored balance that could become stale.
 
-## 5. Implement useful statistics
+## 5. Implement useful statistics ✅
 
-Replace placeholder statistics with data derived from transactions:
+The statistics screen now derives its data from transactions and supports:
 
-- Spending this month compared with the previous month.
-- Spending by category.
-- Income versus expenses.
-- Daily or weekly spending trends.
-- Top categories and largest transactions.
-- Date-range filtering.
+- ✅ Spending this month compared with the previous month.
+- ✅ Spending by category.
+- ✅ Income versus expenses.
+- ✅ Daily spending trends.
+- ✅ Top categories and largest transactions.
+- ✅ Date-range filtering.
 
-Keep aggregation logic in a service or utility module so it can be tested
-without rendering a screen.
+Aggregation logic lives in a service module so it can be tested without
+rendering a screen.
 
 ## 6. Add budgets and recurring expenses
 
