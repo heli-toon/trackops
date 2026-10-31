@@ -27,6 +27,12 @@ const Profile = () => {
       routeName: "/(modals)/profileModal",
     },
     {
+      title: 'Budgets',
+      icon: <Ionicons name="pie-chart-outline" size={26} color={colors.white} />,
+      bgColor: "#ca8a04",
+      routeName: "/budgets",
+    },
+    {
       title: 'Settings',
       icon: <Ionicons name="settings" size={26} color={colors.white} />,
       bgColor: "#059669",

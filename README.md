@@ -119,5 +119,7 @@ assets/              App images and fonts
 - Transaction, wallet, category, budget, and user-preference data is scoped
   under each authenticated user's Firestore document.
 - Monetary amounts are stored as integer minor units (for example, cents).
-- The wallet total is currently hard-coded as a placeholder; transaction
-  screens and statistics are not implemented yet.
+- Monthly category budgets are available from the Profile screen. Budget
+  progress is calculated from expense transactions, with overspending warnings
+  and a history list. Recurring automation and notifications are intentionally
+  deferred until the transaction model is further stabilized.

@@ -100,16 +100,18 @@ The statistics screen now derives its data from transactions and supports:
 Aggregation logic lives in a service module so it can be tested without
 rendering a screen.
 
-## 6. Add budgets and recurring expenses
+## 6. Add budgets and recurring expenses ✅
 
 After the basic transaction flow works, add features that make the tracker more
 useful:
 
-- Monthly category budgets.
-- Progress indicators and overspending warnings.
-- Recurring income and expenses.
-- Optional reminders for recurring transactions.
-- A budget history view.
+- ✅ Monthly category budgets.
+- ✅ Progress indicators and overspending warnings.
+- Recurring income and expenses (deferred until the transaction model is more
+  stable).
+- Optional reminders for recurring transactions (deferred with recurring
+  automation).
+- ✅ A budget history view.
 
 Start with monthly budgets only. Avoid adding notifications or recurring
 automation until the underlying transaction model is stable.
