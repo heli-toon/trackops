@@ -22,7 +22,7 @@ const Login = () => {
         iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
         webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     });
-    const {login: loginUser, googleLogin} = useAuth();
+    const {login: loginUser, googleLogin, resetPassword} = useAuth();
 
     const emailRef = useRef('');
     const passwordRef = useRef('');
@@ -66,6 +66,16 @@ const Login = () => {
             setIsLoading(false);
         }
     };
+    const handlePasswordReset = async () => {
+        if (!emailRef.current.trim()) {
+            Alert.alert('Forgot Password', 'Enter your email address first.');
+            return;
+        }
+        setIsLoading(true);
+        const response = await resetPassword(emailRef.current);
+        setIsLoading(false);
+        Alert.alert('Forgot Password', response.msg ?? (response.success ? 'Check your email.' : 'Unable to reset your password.'));
+    };
     const router = useRouter();
     
     return (
@@ -80,7 +90,9 @@ const Login = () => {
                     <Typo size={16} color={colors.textLighter}>Login now and start tracking your expenses</Typo>
                     <Input placeholder='Enter your email' icon={<Ionicons size={verticalScale(26)} color={colors.neutral300} name='at' />} onChangeText={value => emailRef.current = value} />
                     <Input placeholder='Enter your password' icon={<Ionicons size={verticalScale(26)} color={colors.neutral300} name='key' />} onChangeText={value => passwordRef.current = value} secureTextEntry />
-                    <Typo size={14} color={colors.text} style={{alignSelf:'flex-end'}}>Forgot Password?</Typo>
+                    <Pressable onPress={handlePasswordReset} style={{alignSelf:'flex-end'}}>
+                        <Typo size={14} color={colors.text}>Forgot Password?</Typo>
+                    </Pressable>
 
                     <Button loading={isLoading} onPress={handleSubmit}><Typo color={colors.black} size={21} fontWeight={'700'}>Login</Typo></Button>
                     <Button loading={isLoading} onPress={handleGoogleLogin} style={styles.googleButton}>

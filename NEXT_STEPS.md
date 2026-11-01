@@ -116,17 +116,17 @@ useful:
 Start with monthly budgets only. Avoid adding notifications or recurring
 automation until the underlying transaction model is stable.
 
-## 7. Improve authentication and account management
+## 7. Improve authentication and account management ✅
 
 The project now supports email/password authentication and Google sign-in.
 Continue by adding:
 
-- Password reset.
-- Email verification.
-- Sign-out.
-- Account deletion.
-- A clear profile screen with the user's photo and display name.
-- Handling for accounts that use different sign-in providers.
+- ✅ Password reset.
+- ✅ Email verification.
+- ✅ Sign-out.
+- ✅ Account deletion.
+- ✅ A clear profile screen with the user's photo, display name, verification status, and provider.
+- ✅ Handling for accounts that use different sign-in providers.
 
 Review Firebase Authentication and Firestore rules before production. A user
 should only be able to read and write their own documents.

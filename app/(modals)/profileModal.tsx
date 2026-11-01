@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { colors, spacingX, spacingY } from '@/constants/theme';
 import { scale, verticalScale } from '@/utils/styling';
@@ -63,6 +63,11 @@ const ProfileModal = () => {
               <Ionicons name='pencil' size={verticalScale(20)} color={colors.neutral800} />
             </TouchableOpacity>
           </View>
+          {userData.image ? (
+            <TouchableOpacity onPress={() => setUserData({...userData, image: null})}>
+              <Typo color={colors.primary} style={{textAlign: 'center'}}>Remove profile photo</Typo>
+            </TouchableOpacity>
+          ) : null}
           <View style={styles.inputContainer}>
             <Typo color={colors.neutral200}>Name</Typo>
             <Input placeholder="Name" value={userData.name} onChangeText={value=>setUserData({...userData, name:value})} />

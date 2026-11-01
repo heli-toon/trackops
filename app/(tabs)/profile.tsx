@@ -11,12 +11,10 @@ import { Ionicons } from '@expo/vector-icons'
 import { Image } from 'expo-image'
 import { getProfileImage } from '@/services/imageService'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { signOut } from '@firebase/auth'
-import { auth } from '@/config/firebase'
 import { useRouter } from 'expo-router'
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, logout, deleteAccount, sendVerificationEmail, updateUserData } = useAuth();
   const router = useRouter();
 
   const accountOptions:accountOptionType[] = [
@@ -50,11 +48,36 @@ const Profile = () => {
       bgColor: "#e11d48",
       // routeName: "/(modals)/profileModal",
     },
+    ...(!user?.emailVerified && user?.providerIds?.includes('password') ? [{
+      title: 'Verify Email',
+      icon: <Ionicons name="mail-outline" size={26} color={colors.white} />,
+      bgColor: "#2563eb",
+    }] : []),
+    {
+      title: 'Delete Account',
+      icon: <Ionicons name="trash-outline" size={26} color={colors.white} />,
+      bgColor: "#991b1b",
+    },
   ]
 
   const handleLogout = async () => {
-    await signOut(auth);
+    const response = await logout();
+    if (!response.success) Alert.alert("Logout", response.msg);
   }
+
+  const handleDeleteAccount = async () => {
+    const response = await deleteAccount();
+    if (!response.success) {
+      Alert.alert("Delete Account", response.msg);
+    }
+  };
+
+  const showDeleteAccountAlert = () => {
+    Alert.alert("Delete Account", "This permanently deletes your account and profile. This cannot be undone.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: handleDeleteAccount },
+    ]);
+  };
 
   const showLogoutAlert = () =>{
     Alert.alert("Confirm", "Are you sure you want to logout?", [
@@ -72,8 +95,17 @@ const Profile = () => {
   }
 
   const handlePress = (item:accountOptionType) => {
-    if (item.title  == 'Logout'){
+    if (item.title === 'Logout'){
        showLogoutAlert();
+    }
+    if (item.title === 'Delete Account') {
+      showDeleteAccountAlert();
+    }
+    if (item.title === 'Verify Email') {
+      sendVerificationEmail().then((response) => {
+        Alert.alert('Verify Email', response.msg);
+        if (response.success) updateUserData(user?.uid as string);
+      });
     }
     if (item.routeName) router.push(item.routeName);
   }
@@ -89,6 +121,12 @@ const Profile = () => {
           <View style={styles.nameContainer}>
             <Typo size={24} fontWeight={'600'} color={colors.neutral100}>{user?.name}</Typo>
             <Typo size={15} color={colors.neutral400}>{user?.email}</Typo>
+            <Typo size={13} color={user?.emailVerified ? colors.primary : colors.rose}>
+              {user?.emailVerified ? 'Email verified' : 'Email not verified'}
+            </Typo>
+            <Typo size={13} color={colors.neutral400}>
+              Sign-in: {user?.providerIds?.includes('google.com') ? 'Google' : 'Email and password'}
+            </Typo>
           </View>
         </View>
         <View style={styles.accountOptions}>

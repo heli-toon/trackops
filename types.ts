@@ -45,6 +45,8 @@ export type UserType = {
     email? : string | null;
     name? : string | null
     image?: any;
+    emailVerified?: boolean;
+    providerIds?: string[];
 } | null;
 export type UserDataType = {
     name: string;
@@ -66,6 +68,10 @@ export type AuthContextType = {
         password: string,
         name: string,
     ) => Promise <{ success: boolean; msg?: string }>;
+    resetPassword: (email: string) => Promise<{ success: boolean; msg?: string }>;
+    sendVerificationEmail: () => Promise<{ success: boolean; msg?: string }>;
+    logout: () => Promise<{ success: boolean; msg?: string }>;
+    deleteAccount: () => Promise<{ success: boolean; msg?: string }>;
     updateUserData: (userId : string) => Promise<void>;
 };
 export type IconProps = {
