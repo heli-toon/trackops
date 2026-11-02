@@ -28,15 +28,18 @@ const Login = () => {
     const passwordRef = useRef('');
 
     const handleSubmit = async () =>{
-        if (!emailRef || !passwordRef){
+        if (!emailRef.current.trim() || !passwordRef.current){
             Alert.alert('Login', 'Please fill all the fields');
             return;
         }
         setIsLoading(true);
-        const res = await loginUser(emailRef.current, passwordRef.current);
-        setIsLoading(false);
-        if (!res.success){
-            Alert.alert("Login", res.msg);
+        try {
+            const res = await loginUser(emailRef.current.trim(), passwordRef.current);
+            if (!res.success){
+                Alert.alert("Login", res.msg);
+            }
+        } finally {
+            setIsLoading(false);
         }
     }
     const handleGoogleLogin = async () => {

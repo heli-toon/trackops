@@ -1,4 +1,12 @@
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import React, { useState } from 'react'
 import { colors, spacingX, spacingY } from '@/constants/theme';
 import { scale, verticalScale } from '@/utils/styling';
@@ -54,23 +62,41 @@ const ProfileModal = () => {
   }
   return (
     <ModalWrapper>
+      <KeyboardAvoidingView
+        style={styles.keyboard}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
       <View style={styles.container}>
         <Header title='Update Profile' leftIcon={<BackButton />} style={{marginBottom:spacingY._10}} />
-        <ScrollView contentContainerStyle={styles.form}>
+        <ScrollView contentContainerStyle={styles.form} keyboardShouldPersistTaps="handled">
           <View style={styles.avatarContainer}>
             <Image style={styles.avatar} source={getProfileImage(userData.image)} contentFit='cover' transition={100} />
-            <TouchableOpacity style={styles.editIcon} onPress={onPickImage}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel="Change profile photo"
+              style={styles.editIcon}
+              onPress={onPickImage}
+            >
               <Ionicons name='pencil' size={verticalScale(20)} color={colors.neutral800} />
             </TouchableOpacity>
           </View>
           {userData.image ? (
-            <TouchableOpacity onPress={() => setUserData({...userData, image: null})}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel="Remove profile photo"
+              onPress={() => setUserData({...userData, image: null})}
+            >
               <Typo color={colors.primary} style={{textAlign: 'center'}}>Remove profile photo</Typo>
             </TouchableOpacity>
           ) : null}
           <View style={styles.inputContainer}>
             <Typo color={colors.neutral200}>Name</Typo>
-            <Input placeholder="Name" value={userData.name} onChangeText={value=>setUserData({...userData, name:value})} />
+            <Input
+              accessibilityLabel="Profile name"
+              placeholder="Name"
+              value={userData.name}
+              onChangeText={value=>setUserData({...userData, name:value})}
+            />
           </View>
         </ScrollView>
       </View>
@@ -79,6 +105,7 @@ const ProfileModal = () => {
           <Typo color={colors.black} fontWeight={"700"}>Update</Typo>
         </Button>
       </View>
+      </KeyboardAvoidingView>
     </ModalWrapper>
   )
 }
@@ -86,6 +113,7 @@ const ProfileModal = () => {
 export default ProfileModal;
 
 const styles = StyleSheet.create({
+  keyboard: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: 'space-between',

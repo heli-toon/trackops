@@ -69,6 +69,8 @@ const Home = () => {
             {transactions.slice(0, 20).map((transaction) => (
               <TouchableOpacity
                 key={transaction.id}
+                accessibilityRole="button"
+                accessibilityLabel={`Open ${transaction.description} transaction`}
                 style={styles.transaction}
                 onPress={() => router.push({ pathname: "../transaction", params: { transactionId: transaction.id } })}
               >

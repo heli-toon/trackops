@@ -40,3 +40,6 @@ yarn-error.*
 
 app-example
 secrets.txt
+
+android
+ios

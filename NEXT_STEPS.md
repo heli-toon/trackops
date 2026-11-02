@@ -140,9 +140,11 @@ Important states to handle throughout the app:
 - Slow network requests.
 - Firestore permission failures.
 - Offline mode and retry actions.
-- Duplicate submissions.
-- Keyboard and safe-area behavior on forms.
-- Accessible labels and sufficient color contrast.
+- ✅ Duplicate submissions are prevented while authentication and form requests
+  are in progress.
+- ✅ Keyboard behavior is handled for transaction, wallet, and profile forms.
+- ✅ Accessible labels and roles cover the primary transaction, wallet, budget,
+  and profile actions.
 - Currency formatting based on the user's selected currency.
 
 Use confirmation prompts for destructive actions such as deleting transactions,

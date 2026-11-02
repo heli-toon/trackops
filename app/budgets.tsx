@@ -177,6 +177,9 @@ const Budgets = () => {
               {categories.map((category) => (
                 <TouchableOpacity
                   key={category.id}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: categoryId === category.id }}
+                  accessibilityLabel={`Budget category ${category.label}`}
                   onPress={() => setCategoryId(category.id)}
                   style={[
                     styles.option,
@@ -193,6 +196,7 @@ const Budgets = () => {
               ))}
             </View>
             <Input
+              accessibilityLabel="Monthly budget amount"
               placeholder="Monthly amount"
               keyboardType="decimal-pad"
               value={amount}
@@ -268,7 +272,13 @@ const BudgetCard = ({
   onEdit: () => void;
   onDelete: () => void;
 }) => (
-  <TouchableOpacity style={styles.card} onPress={onEdit} onLongPress={onDelete}>
+  <TouchableOpacity
+    accessibilityRole="button"
+    accessibilityLabel={`Edit ${status.budget.categoryId} budget`}
+    style={styles.card}
+    onPress={onEdit}
+    onLongPress={onDelete}
+  >
     <View style={styles.cardHeader}>
       <View>
         <Typo fontWeight="600">{status.budget.categoryId}</Typo>

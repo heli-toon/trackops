@@ -147,6 +147,8 @@ const Wallet = () => {
               {wallets.map((wallet) => (
                 <TouchableOpacity
                   key={wallet.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Edit ${wallet.name}`}
                   style={styles.walletCard}
                   onPress={() =>
                     router.push({
@@ -174,6 +176,7 @@ const Wallet = () => {
                     <View style={styles.walletActions}>
                       <Typo fontWeight="600">{formatAmount(wallet.balanceMinor)}</Typo>
                       <TouchableOpacity
+                        accessibilityRole="button"
                         accessibilityLabel={`Delete ${wallet.name}`}
                         onPress={() => removeWallet(wallet)}
                       >

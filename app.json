@@ -8,13 +8,15 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.trackops"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.trackops"
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +33,7 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
           "dark": {
-            "image": "./assets/splash-icon.png",
+            "image": "./assets/images/splash-icon.png",
             "imageWidth": 200,
             "backgroundColor": "#000000",
             "resizeMode": "contain"

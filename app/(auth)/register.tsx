@@ -21,16 +21,18 @@ const Register = () => {
     const { register: registerUser } = useAuth();
 
     const handleSubmit = async () =>{
-        if (!emailRef || !passwordRef || !nameRef){
+        if (!emailRef.current.trim() || !passwordRef.current || !nameRef.current.trim()){
             Alert.alert('Register', 'Please fill all the fields');
             return;
         };
         setIsLoading(true);
-        const res = await registerUser(emailRef.current, passwordRef.current, nameRef.current);
-        setIsLoading(false);
-        console.log('registered: ', res);
-        if (res.success){
-            Alert.alert("Sign Up", res.msg);
+        try {
+            const res = await registerUser(emailRef.current.trim(), passwordRef.current, nameRef.current.trim());
+            if (res.success){
+                Alert.alert("Sign Up", res.msg);
+            }
+        } finally {
+            setIsLoading(false);
         }
     }
     return (

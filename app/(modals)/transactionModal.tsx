@@ -1,4 +1,12 @@
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import ModalWrapper from "@/components/ModalWrapper";
@@ -148,16 +156,26 @@ const TransactionModal = () => {
 
   return (
     <ModalWrapper>
+      <KeyboardAvoidingView
+        style={styles.keyboard}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <View style={styles.container}>
         <Header
           title={isEditing ? "Edit Transaction" : "New Transaction"}
           leftIcon={<BackButton />}
         />
-        <ScrollView contentContainerStyle={styles.form}>
+        <ScrollView
+          contentContainerStyle={styles.form}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.typeRow}>
             {(["expense", "income"] as const).map((type) => (
               <TouchableOpacity
                 key={type}
+                accessibilityRole="radio"
+                accessibilityState={{ selected: values.type === type }}
+                accessibilityLabel={`${type === "expense" ? "Expense" : "Income"} transaction`}
                 onPress={() => updateValue("type", type)}
                 style={[styles.typeButton, values.type === type && styles.selected]}
               >
@@ -172,6 +190,7 @@ const TransactionModal = () => {
             <Typo color={colors.neutral200}>Amount</Typo>
             <Input
               placeholder="0.00"
+              accessibilityLabel="Transaction amount"
               keyboardType="decimal-pad"
               value={values.amount}
               onChangeText={(value) => updateValue("amount", value)}
@@ -182,6 +201,7 @@ const TransactionModal = () => {
             <Typo color={colors.neutral200}>Description</Typo>
             <Input
               placeholder="What was this for?"
+              accessibilityLabel="Transaction description"
               value={values.description}
               onChangeText={(value) => updateValue("description", value)}
             />
@@ -191,6 +211,7 @@ const TransactionModal = () => {
             <Typo color={colors.neutral200}>Date (YYYY-MM-DD)</Typo>
             <Input
               placeholder={today()}
+              accessibilityLabel="Transaction date"
               value={values.date}
               onChangeText={(value) => updateValue("date", value)}
             />
@@ -202,6 +223,9 @@ const TransactionModal = () => {
               {categories.map((category) => (
                 <TouchableOpacity
                   key={category.id}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: values.categoryId === category.id }}
+                  accessibilityLabel={`Category ${category.label}`}
                   onPress={() => updateValue("categoryId", category.id)}
                   style={[styles.option, values.categoryId === category.id && styles.selected]}
                 >
@@ -219,6 +243,9 @@ const TransactionModal = () => {
               {wallets.map((wallet) => (
                 <TouchableOpacity
                   key={wallet.id}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: values.walletId === wallet.id }}
+                  accessibilityLabel={`Wallet ${wallet.name}`}
                   onPress={() => updateValue("walletId", wallet.id || "")}
                   style={[styles.option, values.walletId === wallet.id && styles.selected]}
                 >
@@ -242,6 +269,7 @@ const TransactionModal = () => {
           </Button>
         </View>
       </View>
+      </KeyboardAvoidingView>
     </ModalWrapper>
   );
 };
@@ -250,6 +278,7 @@ export default TransactionModal;
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: spacingX._20 },
+  keyboard: { flex: 1 },
   form: { gap: spacingY._20, paddingVertical: spacingY._20 },
   field: { gap: spacingY._7 },
   typeRow: { flexDirection: "row", gap: spacingX._10 },

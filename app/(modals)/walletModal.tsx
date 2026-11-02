@@ -1,4 +1,11 @@
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { colors, spacingX, spacingY } from "@/constants/theme";
@@ -71,17 +78,25 @@ const WalletModal = () => {
 
   return (
     <ModalWrapper>
+      <KeyboardAvoidingView
+        style={styles.keyboard}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <View style={styles.container}>
         <Header
           title={isEditing ? "Edit Wallet" : "New Wallet"}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
-        <ScrollView contentContainerStyle={styles.form}>
+        <ScrollView
+          contentContainerStyle={styles.form}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.inputContainer}>
             <Typo color={colors.neutral200}>Wallet Name</Typo>
             <Input
               placeholder="Cash"
+              accessibilityLabel="Wallet name"
               value={wallet.name}
               onChangeText={(name) => setWallet((current) => ({ ...current, name }))}
               autoCapitalize="words"
@@ -91,6 +106,7 @@ const WalletModal = () => {
             <Typo color={colors.neutral200}>Opening Balance</Typo>
             <Input
               placeholder="0.00"
+              accessibilityLabel="Opening balance"
               value={openingBalance}
               onChangeText={setOpeningBalance}
               keyboardType="decimal-pad"
@@ -108,6 +124,7 @@ const WalletModal = () => {
           </Typo>
         </Button>
       </View>
+      </KeyboardAvoidingView>
     </ModalWrapper>
   );
 };
@@ -115,6 +132,7 @@ const WalletModal = () => {
 export default WalletModal;
 
 const styles = StyleSheet.create({
+  keyboard: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: "space-between",

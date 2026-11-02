@@ -1,18 +1,32 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { colors, radius } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
 import Loading from './Loading'
 import { CustomButtonProps } from '@/types'
 
-const Button = ({ style, onPress, loading = false, children } : CustomButtonProps) => {
+const Button = ({ style, onPress, loading = false, children, ...props } : CustomButtonProps) => {
     if (loading) {
         return (
-            <View style={[styles.button, style, {backgroundColor : 'transparent'}]}><Loading /></View>
+            <View
+                accessible
+                accessibilityRole="button"
+                accessibilityState={{ busy: true, disabled: true }}
+                style={[styles.button, style, {backgroundColor : 'transparent'}]}
+            >
+                <Loading />
+            </View>
         )
     }
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
+        <TouchableOpacity
+            {...props}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: props.disabled }}
+            disabled={props.disabled}
+            onPress={onPress}
+            style={[styles.button, style]}
+        >
             {children}
         </TouchableOpacity>
     )
