@@ -15,6 +15,8 @@ import {
   TransactionStatistics,
 } from "@/services/statisticsService";
 import { TransactionType } from "@/types";
+import { usePreferences } from "@/contexts/preferencesContext";
+import { getFirestoreErrorMessage } from "@/utils/firestoreError";
 
 const ranges: { label: string; value: StatisticsRange }[] = [
   { label: "This month", value: "this-month" },
@@ -22,11 +24,10 @@ const ranges: { label: string; value: StatisticsRange }[] = [
   { label: "All time", value: "all-time" },
 ];
 
-const formatAmount = (amountMinor: number) => (amountMinor / 100).toFixed(2);
-
 const Statistics = () => {
   const { user } = useAuth();
   const uid = user?.uid;
+  const { format } = usePreferences();
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [range, setRange] = useState<StatisticsRange>("this-month");
   const [statistics, setStatistics] = useState<TransactionStatistics | null>(
@@ -67,8 +68,8 @@ const Statistics = () => {
         const nextTransactions = await listTransactions(uid);
         setTransactions(nextTransactions);
         updateStatistics(range, nextTransactions);
-      } catch {
-        setError("Unable to load statistics. Check your connection.");
+      } catch (err) {
+        setError(getFirestoreErrorMessage(err, "Unable to load statistics. Check your connection."));
       } finally {
         setLoading(false);
         setRefreshing(false);
@@ -177,7 +178,7 @@ const Statistics = () => {
                     <View style={styles.categoryHeading}>
                       <Typo>{item.categoryId}</Typo>
                       <Typo color={colors.neutral400} size={14}>
-                        {formatAmount(item.amountMinor)} ({item.percentage.toFixed(0)}%)
+                        {format(item.amountMinor)} ({item.percentage.toFixed(0)}%)
                       </Typo>
                     </View>
                     <View style={styles.progressTrack}>
@@ -231,7 +232,7 @@ const Statistics = () => {
                       </Typo>
                     </View>
                     <Typo color={colors.rose} fontWeight="600">
-                      -{formatAmount(transaction.amountMinor)}
+                      -{format(transaction.amountMinor)}
                     </Typo>
                   </View>
                 ))
@@ -254,18 +255,21 @@ const SummaryCard = ({
   amount: number | null;
   color: string;
   percentage?: boolean;
-}) => (
-  <View style={styles.summaryCard}>
-    <Typo color={colors.neutral400} size={13}>
-      {label}
-    </Typo>
-    <Typo color={color} fontWeight="600" size={18}>
-      {amount === null
-        ? "N/A"
-        : `${percentage ? amount.toFixed(0) : formatAmount(amount)}${percentage ? "%" : ""}`}
-    </Typo>
-  </View>
-);
+}) => {
+  const { format } = usePreferences();
+  return (
+    <View style={styles.summaryCard}>
+      <Typo color={colors.neutral400} size={13}>
+        {label}
+      </Typo>
+      <Typo color={color} fontWeight="600" size={18}>
+        {amount === null
+          ? "N/A"
+          : `${percentage ? amount.toFixed(0) : format(amount)}${percentage ? "%" : ""}`}
+      </Typo>
+    </View>
+  );
+};
 
 const Section = ({
   title,

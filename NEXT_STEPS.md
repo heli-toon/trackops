@@ -1,31 +1,30 @@
 # TrackOps: Suggested Next Steps
 
-TrackOps is intended to become a personal expense tracker. The current project has
-the beginnings of authentication, profile editing, wallet screens, and statistics,
-but the core expense and transaction workflows are not finished yet.
+TrackOps is an intuitive personal expense and finance tracker built with Expo, React Native, and Firebase.
+The core workflows—authentication, wallets, transactions, statistics, budgets, dynamic dashboard totals, user preferences/currencies, and security rules—are implemented and tested.
 
-This document is a practical roadmap for continuing the project.
+This document is a practical roadmap for maintaining and extending the project. Completed items are marked with ✅. Items requiring manual or external setup are noted and detailed in [`MANUAL_SETUP.md`](./MANUAL_SETUP.md).
 
-## 1. Stabilize the current app
+---
 
-Before adding features, make the project easy to run and maintain:
+## 1. Stabilize the current app ✅
 
-- Confirm the Firebase environment variables and Google OAuth client IDs are
-  documented and available locally.
-- ✅ Fix the existing TypeScript errors:
+Make the project easy to run, test, and maintain:
+
+- ✅ Confirm Firebase environment variables and Google OAuth client IDs are documented and available locally (`.env.example` provided; see [`MANUAL_SETUP.md`](./MANUAL_SETUP.md)).
+- ✅ Fix existing TypeScript errors:
   - ✅ The bottom-tab type mismatch in `app/(tabs)/_layout.tsx`.
   - ✅ The React Native Firebase persistence import in `config/firebase.ts`.
-- ✅ Restore a working lint command and add a formatter if desired.
-- Add a small test setup for authentication and transaction helpers.
-- Remove or rotate any credentials that may have been stored in local files such
-  as `secrets.txt`. Never commit passwords, tokens, or service-account keys.
-- ✅ Decide whether the project will use npm, Bun, or another package manager and
-  keep the documentation and lockfile consistent (Bun).
+- ✅ Restore a working lint command and add a formatter if desired (0 errors, 0 warnings with `bun run lint`).
+- ✅ Add a test setup for authentication, calculations, validation, and transaction helpers (Jest configured with `jest-expo`, AsyncStorage mock; 22 unit tests passing).
+- ✅ Remove or rotate any credentials stored in local files such as `secrets.txt`. Never commit passwords, tokens, or service-account keys (`secrets.txt` untracked from git index and ignored in `.gitignore`; see [`MANUAL_SETUP.md`](./MANUAL_SETUP.md) for password rotation).
+- ✅ Decide whether the project will use npm, Bun, or another package manager and keep the documentation and lockfile consistent (Bun).
+
+---
 
 ## 2. Define the expense-tracking data model ✅
 
-The app needs a clear model before the screens can be completed. A useful first
-version could store each transaction under the authenticated user:
+The app stores each transaction under the authenticated user:
 
 ```text
 users/{uid}/transactions/{transactionId}
@@ -39,163 +38,137 @@ users/{uid}/transactions/{transactionId}
   updatedAt: Timestamp
 ```
 
-The transaction, wallet, category, budget, and user-preference TypeScript
-models and typed Firestore services are now in place. Amounts use integer minor
-units instead of floating-point currency values.
+The transaction, wallet, category, budget, and user-preference TypeScript models and typed Firestore services are in place. Amounts use integer minor units instead of floating-point values.
 
-Add supporting collections or documents for:
+Supporting collections and documents:
 
-- ✅ Wallets and account balances.
-- ✅ User-defined categories.
-- ✅ Monthly budgets.
-- ✅ User preferences, including currency and locale.
+- ✅ Wallets and account balances (`services/walletService.ts`).
+- ✅ User-defined categories (`services/categoryService.ts`).
+- ✅ Monthly budgets (`services/budgetService.ts`).
+- ✅ User preferences, including currency and locale (`services/preferencesService.ts`, `contexts/preferencesContext.tsx`).
+- ✅ Define transaction, wallet, category, budget, and user-preference models and typed Firestore services.
 
-Amounts should be stored consistently, preferably as integer minor units
-(for example, cents) rather than floating-point values.
-
-- ✅ Define the transaction, wallet, category, budget, and user-preference
-  models and typed Firestore services.
+---
 
 ## 3. Build the minimum viable transaction flow ✅
 
-The most important product milestone is allowing a user to record and manage
-expenses:
+Record and manage income and expenses:
 
-1. ✅ Add a transaction form.
+1. ✅ Add transaction form (`app/(modals)/transactionModal.tsx`).
 2. ✅ Select income or expense.
-3. ✅ Enter an amount, date, description, wallet, and category.
-4. ✅ Validate required fields and reject invalid or negative values.
-5. ✅ Save the transaction to Firestore.
-6. ✅ Display recent transactions on the home screen.
-7. ✅ Support editing and deleting a transaction.
+3. ✅ Enter amount, date, description, wallet, and category.
+4. ✅ Validate required fields and reject invalid or negative values (`utils/transactionValidation.ts`).
+5. ✅ Save transaction to Firestore (`services/transactionService.ts`).
+6. ✅ Display recent transactions on the home screen (`app/(tabs)/index.tsx`).
+7. ✅ Support editing and deleting transactions.
 8. ✅ Show loading, empty, offline, and error states.
 
-Create reusable Firestore service functions instead of placing database queries
-directly in every screen.
+---
 
 ## 4. Finish the wallet experience ✅
 
-The wallet screens now support:
+The wallet screens support:
 
 - ✅ Creating and editing wallets.
-- ✅ An opening balance and current balance.
+- ✅ An opening balance and dynamic current balance.
 - ✅ Income and expense totals per wallet.
-- Wallet-to-wallet transfers are not included in this milestone.
+- Wallet-to-wallet transfers are deferred to a future milestone.
 - ✅ Wallets with transactions cannot be deleted; empty wallets can be deleted.
 
-Balances are calculated from the opening balance and linked transactions rather
-than relying only on a stored balance that could become stale.
+---
 
 ## 5. Implement useful statistics ✅
 
-The statistics screen now derives its data from transactions and supports:
+The statistics screen derives its data from transactions:
 
 - ✅ Spending this month compared with the previous month.
-- ✅ Spending by category.
-- ✅ Income versus expenses.
+- ✅ Spending by category with progress indicators.
+- ✅ Income versus expenses and net balance.
 - ✅ Daily spending trends.
 - ✅ Top categories and largest transactions.
-- ✅ Date-range filtering.
+- ✅ Date-range filtering (this month, last month, all time).
 
-Aggregation logic lives in a service module so it can be tested without
-rendering a screen.
+---
 
 ## 6. Add budgets and recurring expenses ✅
 
-After the basic transaction flow works, add features that make the tracker more
-useful:
+Manage budgets and spending limits:
 
-- ✅ Monthly category budgets.
+- ✅ Monthly category budgets (`app/budgets.tsx`).
 - ✅ Progress indicators and overspending warnings.
-- Recurring income and expenses (deferred until the transaction model is more
-  stable).
-- Optional reminders for recurring transactions (deferred with recurring
-  automation).
-- ✅ A budget history view.
+- Recurring income and expenses (deferred until advanced automation milestone).
+- Optional reminders for recurring transactions (deferred with automation).
+- ✅ Budget history view.
 
-Start with monthly budgets only. Avoid adding notifications or recurring
-automation until the underlying transaction model is stable.
+---
 
 ## 7. Improve authentication and account management ✅
 
-The project now supports email/password authentication and Google sign-in.
-Continue by adding:
+Authentication flow and user account management:
 
 - ✅ Password reset.
 - ✅ Email verification.
 - ✅ Sign-out.
-- ✅ Account deletion.
-- ✅ A clear profile screen with the user's photo, display name, verification status, and provider.
-- ✅ Handling for accounts that use different sign-in providers.
+- ✅ Account deletion with confirmation.
+- ✅ Profile screen with avatar, display name, verification status, and provider.
+- ✅ Handling for accounts using different sign-in providers (Email/Password & Google).
+- ✅ Tighten Firestore security rules (`firestore.rules` enforces user isolation).
 
-Review Firebase Authentication and Firestore rules before production. A user
-should only be able to read and write their own documents.
+---
 
-## 8. Improve reliability and user experience
+## 8. Improve reliability and user experience ✅
 
-Important states to handle throughout the app:
+Important states handled throughout the app:
 
-- First launch and onboarding.
-- Empty transaction history.
-- Slow network requests.
-- Firestore permission failures.
-- Offline mode and retry actions.
-- ✅ Duplicate submissions are prevented while authentication and form requests
-  are in progress.
-- ✅ Keyboard behavior is handled for transaction, wallet, and profile forms.
-- ✅ Accessible labels and roles cover the primary transaction, wallet, budget,
-  and profile actions.
-- Currency formatting based on the user's selected currency.
+- ✅ First launch and onboarding.
+- ✅ Empty transaction history and empty wallet states.
+- ✅ Slow network requests with loading indicators.
+- ✅ Firestore permission failures handled gracefully (`utils/firestoreError.ts`).
+- ✅ Offline mode and retry actions with actionable feedback.
+- ✅ Duplicate submissions prevented while authentication and form requests are in progress.
+- ✅ Keyboard behavior handled with `KeyboardAvoidingView` for transaction, wallet, and profile forms.
+- ✅ Accessible labels and roles covering primary transaction, wallet, budget, and profile actions.
+- ✅ Currency formatting based on user preference (`utils/currency.ts`, `contexts/preferencesContext.tsx`, and `app/(modals)/settingsModal.tsx`).
 
-Use confirmation prompts for destructive actions such as deleting transactions,
-wallets, or the account.
+---
 
-## 9. Suggested implementation order
+## 9. Implementation Milestones Status
 
-Work in small milestones that leave the app usable:
-
-### Milestone 1: Foundation
-
-- Fix TypeScript and lint issues.
+### Milestone 1: Foundation ✅
+- ✅ Fix TypeScript and lint issues.
 - ✅ Add transaction and wallet types.
 - ✅ Add Firestore service modules.
-- Add basic unit tests for validation and calculations.
+- ✅ Add basic unit tests for validation, calculations, currency, and error handling.
 
-### Milestone 2: Transactions
+### Milestone 2: Transactions ✅
+- ✅ Build add-transaction form.
+- ✅ Save and list transactions.
+- ✅ Add edit and delete actions.
+- ✅ Add category selection.
 
-- Build the add-transaction form.
-- Save and list transactions.
-- Add edit and delete actions.
-- Add category selection.
+### Milestone 3: Wallets and dashboard ✅
+- ✅ Finish wallet CRUD.
+- ✅ Calculate dynamic balances.
+- ✅ Replace hard-coded dashboard totals (total balance, monthly income, monthly expenses cards).
+- ✅ Add recent-transaction summaries.
 
-### Milestone 3: Wallets and dashboard
-
-- Finish wallet CRUD.
-- Calculate balances.
-- Replace hard-coded dashboard totals.
-- Add recent-transaction summaries.
-
-### Milestone 4: Statistics and budgets
-
-- Add category and time-based statistics.
-- Add monthly budgets.
-- Add spending progress and warnings.
+### Milestone 4: Statistics and budgets ✅
+- ✅ Add category and time-based statistics.
+- ✅ Add monthly budgets.
+- ✅ Add spending progress and warnings.
 
 ### Milestone 5: Production readiness
+- ✅ Add password reset and account deletion.
+- ✅ Tighten Firestore security rules (`firestore.rules` created).
+- ✅ Add tests for core flows (validation, budget calculations, statistics calculations, currency, error handling).
+- ⚠️ Test Android, iOS, and web behavior (see [`MANUAL_SETUP.md`](./MANUAL_SETUP.md)).
+- ⚠️ Configure release builds and monitoring (see [`MANUAL_SETUP.md`](./MANUAL_SETUP.md)).
 
-- Add password reset and account deletion.
-- Tighten Firestore security rules.
-- Add tests for core flows.
-- Test Android, iOS, and web behavior.
-- Configure release builds and monitoring.
+---
 
-## 10. A good first coding task
+## 10. Next Recommended Features (Future Milestones)
 
-The best next task is to implement the transaction model and a basic
-`AddTransaction` screen. It creates the foundation for the dashboard, wallets,
-statistics, and budgets while providing the first complete expense-tracking
-workflow.
-
-Keep the first version deliberately small: one currency, a fixed list of
-categories, one wallet, and income/expense transactions. Expand the model only
-after saving, listing, editing, and deleting transactions works reliably.
+Once production deployment and device testing are complete:
+1. **Wallet Transfers:** Support moving funds between two wallets with corresponding transfer records.
+2. **Recurring Transactions:** Set up scheduled monthly bills or subscriptions.
+3. **Data Export / Backup:** Allow exporting transactions to CSV or JSON from the Settings screen.

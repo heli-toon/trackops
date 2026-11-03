@@ -27,6 +27,8 @@ import {
   BudgetStatus,
 } from "@/services/budgetService";
 import { BudgetType, TransactionType } from "@/types";
+import { usePreferences } from "@/contexts/preferencesContext";
+import { getFirestoreErrorMessage } from "@/utils/firestoreError";
 
 const categories = [
   { id: "food", label: "Food" },
@@ -41,6 +43,7 @@ const formatAmount = (amountMinor: number) => (amountMinor / 100).toFixed(2);
 
 const Budgets = () => {
   const { user } = useAuth();
+  const { format } = usePreferences();
   const uid = user?.uid;
   const month = getMonthKey();
   const [budgets, setBudgets] = useState<BudgetType[]>([]);
@@ -66,8 +69,8 @@ const Budgets = () => {
         ]);
         setBudgets(nextBudgets);
         setTransactions(nextTransactions);
-      } catch {
-        setError("Unable to load budgets. Check your connection.");
+      } catch (err) {
+        setError(getFirestoreErrorMessage(err, "Unable to load budgets. Check your connection."));
       } finally {
         setLoading(false);
         setRefreshing(false);
@@ -249,7 +252,7 @@ const Budgets = () => {
                     <View key={budget.id} style={styles.historyRow}>
                       <Typo>{budget.month} · {budget.categoryId}</Typo>
                       <Typo color={colors.neutral300}>
-                        {formatAmount(budget.amountMinor)}
+                        {format(budget.amountMinor)}
                       </Typo>
                     </View>
                   ))}
@@ -271,30 +274,32 @@ const BudgetCard = ({
   status: BudgetStatus;
   onEdit: () => void;
   onDelete: () => void;
-}) => (
-  <TouchableOpacity
-    accessibilityRole="button"
-    accessibilityLabel={`Edit ${status.budget.categoryId} budget`}
-    style={styles.card}
-    onPress={onEdit}
-    onLongPress={onDelete}
-  >
-    <View style={styles.cardHeader}>
-      <View>
-        <Typo fontWeight="600">{status.budget.categoryId}</Typo>
-        <Typo color={colors.neutral400} size={13}>
-          {formatAmount(status.spentMinor)} of {formatAmount(status.budget.amountMinor)}
-        </Typo>
+}) => {
+  const { format } = usePreferences();
+  return (
+    <TouchableOpacity
+      accessibilityRole="button"
+      accessibilityLabel={`Edit ${status.budget.categoryId} budget`}
+      style={styles.card}
+      onPress={onEdit}
+      onLongPress={onDelete}
+    >
+      <View style={styles.cardHeader}>
+        <View>
+          <Typo fontWeight="600">{status.budget.categoryId}</Typo>
+          <Typo color={colors.neutral400} size={13}>
+            {format(status.spentMinor)} of {format(status.budget.amountMinor)}
+          </Typo>
+        </View>
+        <View style={styles.cardAmount}>
+          <Typo color={status.isOverspent ? colors.rose : colors.primary} fontWeight="600">
+            {status.isOverspent
+              ? `${format(Math.abs(status.remainingMinor))} over`
+              : `${format(status.remainingMinor)} left`}
+          </Typo>
+          <Typo color={colors.neutral500} size={12}>Tap to edit · hold to delete</Typo>
+        </View>
       </View>
-      <View style={styles.cardAmount}>
-        <Typo color={status.isOverspent ? colors.rose : colors.primary} fontWeight="600">
-          {status.isOverspent
-            ? `${formatAmount(Math.abs(status.remainingMinor))} over`
-            : `${formatAmount(status.remainingMinor)} left`}
-        </Typo>
-        <Typo color={colors.neutral500} size={12}>Tap to edit · hold to delete</Typo>
-      </View>
-    </View>
     <View style={styles.progressTrack}>
       <View
         style={[
@@ -310,7 +315,8 @@ const BudgetCard = ({
       <Typo color={colors.rose} size={13}>Overspending warning</Typo>
     )}
   </TouchableOpacity>
-);
+  );
+};
 
 export default Budgets;
 

@@ -34,7 +34,7 @@ const Profile = () => {
       title: 'Settings',
       icon: <Ionicons name="settings" size={26} color={colors.white} />,
       bgColor: "#059669",
-      // routeName: "/(modals)/profileModal",
+      routeName: "/(modals)/settingsModal",
     },
     {
       title: 'Privacy Policy',

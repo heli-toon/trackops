@@ -29,6 +29,7 @@ import {
   TransactionFormValues,
   validateTransactionForm,
 } from "@/utils/transactionValidation";
+import { getFirestoreErrorMessage } from "@/utils/firestoreError";
 
 const categories = [
   { id: "food", label: "Food" },
@@ -87,8 +88,8 @@ const TransactionModal = () => {
             walletId: current.walletId,
           });
         }
-      } catch {
-        Alert.alert("Unable to load", "Check your connection and try again.");
+      } catch (err) {
+        Alert.alert("Unable to load", getFirestoreErrorMessage(err));
       } finally {
         setLoadingData(false);
       }
@@ -115,8 +116,8 @@ const TransactionModal = () => {
         await createTransaction(user.uid, result.data);
       }
       router.back();
-    } catch {
-      Alert.alert("Unable to save", "Check your connection and try again.");
+    } catch (err) {
+      Alert.alert("Unable to save", getFirestoreErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -134,8 +135,8 @@ const TransactionModal = () => {
           try {
             await deleteTransaction(user.uid as string, transaction.id as string);
             router.back();
-          } catch {
-            Alert.alert("Unable to delete", "Check your connection and try again.");
+          } catch (err) {
+            Alert.alert("Unable to delete", getFirestoreErrorMessage(err));
           } finally {
             setLoading(false);
           }

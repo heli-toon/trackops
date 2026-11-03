@@ -19,13 +19,14 @@ import {
   listWallets,
   WalletSummary,
 } from "@/services/walletService";
-
-const formatAmount = (minor: number) => (minor / 100).toFixed(2);
+import { usePreferences } from "@/contexts/preferencesContext";
+import { getFirestoreErrorMessage } from "@/utils/firestoreError";
 
 const Wallet = () => {
   const router = useRouter();
   const { user } = useAuth();
   const uid = user?.uid;
+  const { format } = usePreferences();
   const [wallets, setWallets] = useState<WalletSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -39,8 +40,8 @@ const Wallet = () => {
       setError("");
       try {
         setWallets(await listWallets(uid));
-      } catch {
-        setError("Unable to load wallets. Check your connection.");
+      } catch (err) {
+        setError(getFirestoreErrorMessage(err, "Unable to load wallets. Check your connection."));
       } finally {
         setLoading(false);
         setRefreshing(false);
@@ -94,7 +95,7 @@ const Wallet = () => {
         <View style={styles.balanceView}>
           <View style={{ alignItems: "center" }}>
             <Typo size={45} fontWeight="500">
-              {formatAmount(totalBalance)}
+              {format(totalBalance)}
             </Typo>
             <Typo size={16} color={colors.neutral300}>
               Total Balance
@@ -169,12 +170,12 @@ const Wallet = () => {
                     <View style={styles.walletInfo}>
                       <Typo fontWeight="600">{wallet.name}</Typo>
                       <Typo color={colors.neutral400} size={13}>
-                        Income {formatAmount(wallet.incomeMinor)} · Expenses{" "}
-                        {formatAmount(wallet.expenseMinor)}
+                        Income {format(wallet.incomeMinor)} · Expenses{" "}
+                        {format(wallet.expenseMinor)}
                       </Typo>
                     </View>
                     <View style={styles.walletActions}>
-                      <Typo fontWeight="600">{formatAmount(wallet.balanceMinor)}</Typo>
+                      <Typo fontWeight="600">{format(wallet.balanceMinor)}</Typo>
                       <TouchableOpacity
                         accessibilityRole="button"
                         accessibilityLabel={`Delete ${wallet.name}`}

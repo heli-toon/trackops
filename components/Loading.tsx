@@ -1,4 +1,4 @@
-import { ActivityIndicator, ActivityIndicatorProps, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, ActivityIndicatorProps, View } from 'react-native'
 import React from 'react'
 import { colors } from '@/constants/theme'
 
@@ -11,5 +11,3 @@ const Loading = ({ size = 'large', color = colors.primary }:ActivityIndicatorPro
 }
 
 export default Loading
-
-const styles = StyleSheet.create({})

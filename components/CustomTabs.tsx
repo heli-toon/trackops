@@ -1,5 +1,4 @@
 import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { Text } from '@react-navigation/elements';
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
 import { colors, spacingY } from '@/constants/theme';
 import { verticalScale } from '@/utils/styling';
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
     tabbar: {
         flexDirection: 'row',
         width: '100%',
-        height: Platform.OS == 'ios' ? verticalScale(73) : verticalScale(55),
+        height: Platform.OS === 'ios' ? verticalScale(73) : verticalScale(55),
         backgroundColor: colors.neutral800,
         justifyContent: 'space-evenly',
         alignItems: 'center',
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
     },
     tabbarItem : {
         flex: 1,
-        marginBottom: Platform.OS == 'ios' ? spacingY._10: spacingY._5,
+        marginBottom: Platform.OS === 'ios' ? spacingY._10: spacingY._5,
         justifyContent: 'center',
         alignItems: 'center',
     },

@@ -19,6 +19,7 @@ import { WalletType } from "@/types";
 import Button from "@/components/Button";
 import { useAuth } from "@/contexts/authContext";
 import { createWallet, updateWallet } from "@/services/walletService";
+import { getFirestoreErrorMessage } from "@/utils/firestoreError";
 
 const WalletModal = () => {
   const router = useRouter();
@@ -69,7 +70,7 @@ const WalletModal = () => {
     } catch (error) {
       Alert.alert(
         "Wallet",
-        error instanceof Error ? error.message : "Unable to save wallet.",
+        getFirestoreErrorMessage(error, "Unable to save wallet."),
       );
     } finally {
       setLoading(false);
